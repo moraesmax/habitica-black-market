@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <link rel="apple-touch-icon" sizes="57x57" href="icons/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="icons/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="icons/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="icons/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="icons/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="icons/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="icons/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="icons/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="icons/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="icons/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="icons/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="icons/favicon-16x16.png">
+    <link rel="manifest" href="icons/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="icons/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+
+    <meta name="description" content="Habitica Black Market" />
+    <meta name="keywords" content="Habitica, items, potion, mana potion, rpg, black market">
+
+    <meta name="theme-color" content="#000">
+
+    <meta property="og:title" content="Habitica Black Market" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="https://moraesmax.github.io/habitica-black-market/img/facebook_share_background.jpg" />
+    <meta property="og:url" content="https://moraesmax.github.io/habitica-black-market/" />
+    <meta property="og:description" content="Where users can buy forbidden items." />
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:url" content="https://moraesmax.github.io/habitica-black-market/">
+    <meta name="twitter:title" content="Habitica Black Market">
+    <meta name="twitter:description" content="Where users can buy forbidden items.">
+    <meta name="twitter:image" content="https://moraesmax.github.io/habitica-black-market/img/iconoriginal.png">
+
+    <meta charset="utf-8">
+    <title>Habitica Black Market</title>
+    <link rel="stylesheet" href="css/normalize.css">
+    <link href='https://fonts.googleapis.com/css?family=Press+Start+2P' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <div class="by-me-wrapper">
+        <div class="by-me">
+            <a class="by-me-link" target="_blank" href="https://github.com/moraesmax">
+                <span class="by-me-text">By @moraesmax</span>
+            </a>
+        </div>
+    </div>
+
+    <h1>Habitica Black Market</h1>
+    <h2>What do you wanna buy today?</h2>
+
+    <div class="shop">
+        <div class="form">
+            <input type="text" name="user" placeholder="User token" value="">
+            <input type="password" name="api" placeholder="Api token" value="">
+        </div>
+        <div class="items">
+            <div class="item">
+                <a href="javascript:void(0)" class="js-mana">
+                    <img src="img/mana.png" alt="mana" />
+                    <span class="description">Recover 25 points of mana.</span>
+                    <span class="price"> - 25 gold coins - </span>
+                </a>
+            </div>
+            <div class="item">
+                <a href="javascript:void(0)" class="js-full-mana">
+                    <img src="img/full-mana.png" alt="full mana" />
+                    <span class="description">Full recover all your mana.</span>
+                    <span class="price"> - 100 gold coins - </span>
+                </a>
+            </div>
+            <div class="item">
+                <a href="javascript:void(0)" class="js-full-hp">
+                    <img src="img/full-hp.png" alt="full hp" />
+                    <span class="description">Full recover all your health.</span>
+                    <span class="price"> - 50 gold coins - </span>
+                </a>
+            </div>
+        </div>
+    </div>
+    <script src="js/jquery.js" charset="utf-8"></script>
+    <script type="text/javascript">
+        $(".js-mana").click(function() {
+            if ($("[name=api]").val() == "" || $("[name=user]").val() == "") {
+                alert("Where is your data keys?");
+            } else {
+                $.ajax({
+                    type: 'GET',
+                    dataType: 'json',
+                    url: "https://habitica.com/api/v2/user",
+                    headers: {
+                        "x-api-key": $("[name=api]").val(),
+                        "x-api-user": $("[name=user]").val()
+                    },
+                }).done(function(olddata) {
+                    if (olddata.stats.gp >= 25) {
+                        $.ajax({
+                            type: 'PUT',
+                            dataType: 'json',
+                            url: "https://habitica.com/api/v2/user",
+                            headers: {
+                                "x-api-key": $("[name=api]").val(),
+                                "x-api-user": $("[name=user]").val()
+                            },
+                            data: {
+                                "stats.mp": ((olddata.stats.mp + 25) > olddata.stats.maxMP) ? (olddata.stats.maxMP) : (olddata.stats.mp + 25),
+                                "stats.gp": (olddata.stats.gp - 25)
+                            }
+                        }).done(function() {
+                            alert("It is a pleasure doing business with you.");
+                        });
+                    } else {
+                        alert("Come back when you have enough gold.");
+                    }
+                });
+            }
+        });
+
+        $(".js-full-mana").click(function() {
+            if ($("[name=api]").val() == "" || $("[name=user]").val() == "") {
+                alert("Where is your data keys?");
+            } else {
+                $.ajax({
+                    type: 'GET',
+                    dataType: 'json',
+                    url: "https://habitica.com/api/v2/user",
+                    headers: {
+                        "x-api-key": $("[name=api]").val(),
+                        "x-api-user": $("[name=user]").val()
+                    },
+                }).done(function(olddata) {
+                    if (olddata.stats.gp >= 100) {
+                        $.ajax({
+                            type: 'PUT',
+                            dataType: 'json',
+                            url: "https://habitica.com/api/v2/user",
+                            headers: {
+                                "x-api-key": $("[name=api]").val(),
+                                "x-api-user": $("[name=user]").val()
+                            },
+                            data: {
+                                "stats.mp": olddata.stats.maxMP,
+                                "stats.gp": (olddata.stats.gp - 100)
+                            }
+                        }).done(function() {
+                            alert("It is a pleasure doing business with you.");
+                        }).fail(function() {
+                            alert("Ops! Error! Check your data!");
+                        });
+                    } else {
+                        alert("Come back when you have enough gold.");
+                    }
+                }).fail(function() {
+                    alert("Ops! Error! Check your data!");
+                });
+            }
+        });
+
+        $(".js-full-hp").click(function() {
+            if ($("[name=api]").val() == "" || $("[name=user]").val() == "") {
+                alert("Where is your data keys?");
+            } else {
+                $.ajax({
+                    type: 'GET',
+                    dataType: 'json',
+                    url: "https://habitica.com/api/v2/user",
+                    headers: {
+                        "x-api-key": $("[name=api]").val(),
+                        "x-api-user": $("[name=user]").val()
+                    },
+                }).done(function(olddata) {
+                    if (olddata.stats.gp >= 50) {
+                        $.ajax({
+                            type: 'PUT',
+                            dataType: 'json',
+                            url: "https://habitica.com/api/v2/user",
+                            headers: {
+                                "x-api-key": $("[name=api]").val(),
+                                "x-api-user": $("[name=user]").val()
+                            },
+                            data: {
+                                "stats.hp": olddata.stats.maxHealth,
+                                "stats.gp": (olddata.stats.gp - 50)
+                            }
+                        }).done(function() {
+                            alert("It is a pleasure doing business with you.");
+                        }).fail(function() {
+                            alert("Ops! Error! Check your data!");
+                        });
+                    } else {
+                        alert("Come back when you have enough gold.");
+                    }
+                }).fail(function() {
+                    alert("Ops! Error! Check your data!");
+                });
+            }
+        });
+    </script>
+</body>
+
+</html>
