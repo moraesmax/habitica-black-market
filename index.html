@@ -66,6 +66,7 @@
         <div class="items">
             <div class="item">
                 <a href="javascript:void(0)" class="js-mana">
+                    <span class="name">Mana Potion</span>
                     <img src="img/mana.png" alt="mana" />
                     <span class="description">Recover 25 points of mana.</span>
                     <span class="price"> - 25 gold coins - </span>
@@ -73,6 +74,7 @@
             </div>
             <div class="item">
                 <a href="javascript:void(0)" class="js-full-mana">
+                    <span class="name">Full Mana Potion</span>
                     <img src="img/full-mana.png" alt="full mana" />
                     <span class="description">Full recover all your mana.</span>
                     <span class="price"> - 100 gold coins - </span>
@@ -80,15 +82,165 @@
             </div>
             <div class="item">
                 <a href="javascript:void(0)" class="js-full-hp">
+                    <span class="name">Full Health Potion</span>
                     <img src="img/full-hp.png" alt="full hp" />
                     <span class="description">Full recover all your health.</span>
                     <span class="price"> - 50 gold coins - </span>
+                </a>
+            </div>
+            <div class="item">
+                <a href="javascript:void(0)" class="js-mana-hp">
+                    <span class="name">Health & Mana Potion</span>
+                    <img src="img/mana-health.png" alt="health & mana" />
+                    <span class="description">Full recover all your health and mana.</span>
+                    <span class="price"> - 125 gold coins - </span>
+                </a>
+            </div>
+            <div class="item">
+                <a href="javascript:void(0)" class="js-blood-magic">
+                    <span class="name">Blood Magic Potion</span>
+                    <img src="img/blood-magic.png" alt="blood magic" />
+                    <span class="description">Recover half of your maximum mana.</span>
+                    <span class="price"> - Half of your maximum hp - </span>
+                </a>
+            </div>
+            <div class="item">
+                <a href="javascript:void(0)" class="js-adrenaline-rush">
+                    <span class="name">Adrenaline Rush Potion</span>
+                    <img src="img/adrenaline-rush.png" alt="adrenaline rush" />
+                    <span class="description">Recover all your health.</span>
+                    <span class="price"> - 10% of your maximum experience bar - </span>
                 </a>
             </div>
         </div>
     </div>
     <script src="js/jquery.js" charset="utf-8"></script>
     <script type="text/javascript">
+        $(".js-adrenaline-rush").click(function() {
+            if ($("[name=api]").val() == "" || $("[name=user]").val() == "") {
+                alert("Where is your data keys?");
+            } else {
+                $.ajax({
+                    type: 'GET',
+                    dataType: 'json',
+                    url: "https://habitica.com/api/v2/user",
+                    headers: {
+                        "x-api-key": $("[name=api]").val(),
+                        "x-api-user": $("[name=user]").val()
+                    },
+                }).done(function(olddata) {
+                    if (olddata.stats.exp > (olddata.stats.toNextLevel / 10)) {
+                        $.ajax({
+                            type: 'PUT',
+                            dataType: 'json',
+                            url: "https://habitica.com/api/v2/user",
+                            headers: {
+                                "x-api-key": $("[name=api]").val(),
+                                "x-api-user": $("[name=user]").val()
+                            },
+                            data: {
+                                "stats.exp": olddata.stats.exp - (olddata.stats.toNextLevel / 10),
+                                "stats.hp": olddata.stats.maxHealth
+                            }
+                        }).done(function() {
+                            alert("It is a pleasure doing business with you.");
+                        }).fail(function() {
+                            alert("Ops! Error! Check your data!");
+                        });
+                    } else {
+                        alert("You don't have enough experience, go live a little bit first, fool!");
+                    }
+                }).fail(function() {
+                    alert("Ops! Error! Check your data!");
+                });
+            }
+        });
+
+
+        $(".js-blood-magic").click(function() {
+            if ($("[name=api]").val() == "" || $("[name=user]").val() == "") {
+                alert("Where is your data keys?");
+            } else {
+                $.ajax({
+                    type: 'GET',
+                    dataType: 'json',
+                    url: "https://habitica.com/api/v2/user",
+                    headers: {
+                        "x-api-key": $("[name=api]").val(),
+                        "x-api-user": $("[name=user]").val()
+                    },
+                }).done(function(olddata) {
+                    if (olddata.stats.hp > (olddata.stats.maxHealth / 2)) {
+                        $.ajax({
+                            type: 'PUT',
+                            dataType: 'json',
+                            url: "https://habitica.com/api/v2/user",
+                            headers: {
+                                "x-api-key": $("[name=api]").val(),
+                                "x-api-user": $("[name=user]").val()
+                            },
+                            data: {
+                                "stats.mp": ((olddata.stats.mp + (olddata.stats.maxMP / 2)) > olddata.stats.maxMP) ? olddata.stats.maxMP : (olddata.stats.mp + (olddata.stats.maxMP / 2)),
+                                "stats.hp": olddata.stats.hp - (olddata.stats.maxHealth / 2)
+                            }
+                        }).done(function() {
+                            alert("It is a pleasure doing business with you.");
+                        }).fail(function() {
+                            alert("Ops! Error! Check your data!");
+                        });
+                    } else {
+                        alert("You gonna die if try that with your health right now, you fool!");
+                    }
+                }).fail(function() {
+                    alert("Ops! Error! Check your data!");
+                });
+            }
+        });
+
+
+
+        $(".js-mana-hp").click(function() {
+            if ($("[name=api]").val() == "" || $("[name=user]").val() == "") {
+                alert("Where is your data keys?");
+            } else {
+                $.ajax({
+                    type: 'GET',
+                    dataType: 'json',
+                    url: "https://habitica.com/api/v2/user",
+                    headers: {
+                        "x-api-key": $("[name=api]").val(),
+                        "x-api-user": $("[name=user]").val()
+                    },
+                }).done(function(olddata) {
+                    if (olddata.stats.gp >= 125) {
+                        $.ajax({
+                            type: 'PUT',
+                            dataType: 'json',
+                            url: "https://habitica.com/api/v2/user",
+                            headers: {
+                                "x-api-key": $("[name=api]").val(),
+                                "x-api-user": $("[name=user]").val()
+                            },
+                            data: {
+                                "stats.mp": olddata.stats.maxMP,
+                                "stats.hp": olddata.stats.maxHealth,
+                                "stats.gp": (olddata.stats.gp - 125)
+                            }
+                        }).done(function() {
+                            alert("It is a pleasure doing business with you.");
+                        }).fail(function() {
+                            alert("Ops! Error! Check your data!");
+                        });
+                    } else {
+                        alert("Come back when you have enough gold.");
+                    }
+                }).fail(function() {
+                    alert("Ops! Error! Check your data!");
+                });
+            }
+        });
+
+
         $(".js-mana").click(function() {
             if ($("[name=api]").val() == "" || $("[name=user]").val() == "") {
                 alert("Where is your data keys?");
