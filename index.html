@@ -109,7 +109,7 @@
                     <span class="name">Adrenaline Rush Potion</span>
                     <img src="img/adrenaline-rush.png" alt="adrenaline rush" />
                     <span class="description">Recover all your health.</span>
-                    <span class="price"> - 10% of your maximum experience bar - </span>
+                    <span class="price"> - 50% of your maximum experience bar - </span>
                 </a>
             </div>
         </div>
@@ -129,7 +129,7 @@
                         "x-api-user": $("[name=user]").val()
                     },
                 }).done(function(olddata) {
-                    if (olddata.stats.exp > (olddata.stats.toNextLevel / 10)) {
+                    if (olddata.stats.exp > (olddata.stats.toNextLevel / 50)) {
                         $.ajax({
                             type: 'PUT',
                             dataType: 'json',
@@ -139,7 +139,7 @@
                                 "x-api-user": $("[name=user]").val()
                             },
                             data: {
-                                "stats.exp": olddata.stats.exp - (olddata.stats.toNextLevel / 10),
+                                "stats.exp": olddata.stats.exp - (olddata.stats.toNextLevel / 50),
                                 "stats.hp": olddata.stats.maxHealth
                             }
                         }).done(function() {
