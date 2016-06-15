@@ -129,7 +129,7 @@
                         "x-api-user": $("[name=user]").val()
                     },
                 }).done(function(olddata) {
-                    if (olddata.stats.exp > (olddata.stats.toNextLevel / 50)) {
+                    if (olddata.stats.exp > (olddata.stats.toNextLevel / 2)) {
                         $.ajax({
                             type: 'PUT',
                             dataType: 'json',
@@ -139,7 +139,7 @@
                                 "x-api-user": $("[name=user]").val()
                             },
                             data: {
-                                "stats.exp": olddata.stats.exp - (olddata.stats.toNextLevel / 50),
+                                "stats.exp": olddata.stats.exp - (olddata.stats.toNextLevel / 2),
                                 "stats.hp": olddata.stats.maxHealth
                             }
                         }).done(function() {
